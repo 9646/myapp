@@ -46,3 +46,12 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+/**
+ * forever start ./bin/www  永久运行
+ * forever stop ./bin/www   停止运行
+ * 
+ * nohup node ./bin/www > log & exit 使用nohup永久运行（使用exit关闭）
+ * ps -ef 用这个命令查看进程
+ * kill -9 12945(pid) 杀死进程
+ */
