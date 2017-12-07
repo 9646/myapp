@@ -1,3 +1,9 @@
 {
-    "token": "wechat"
+    "token": "wechat",
+    "appID":"wx8d789a77193374a0",
+    "appScrect":"e1f466258ffbb172ec5cbae847dbb80a",
+    "apiDomain":"https://api.weixin.qq.com/",
+    "apiURL":{
+        "accessTokenApi":"%scgi-bin/token?grant_type=client_credential&appid=%s&secret=%s"
+    }
 }

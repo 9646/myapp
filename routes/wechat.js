@@ -8,4 +8,10 @@ router.get('/', function(req, res, next) {
     wechatApp.auth(req,res);
 });
 
+router.get('/getAccessToken', function (req, res) {
+    wechatApp.getAccessToken().then(function(data){
+        res.send(data);
+    });  
+});
+
 module.exports = router;

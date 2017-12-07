@@ -1,12 +1,45 @@
 'use strict'
-const crypto =  require('crypto'); //引入加密模块
-
+const crypto =  require('crypto'), //引入加密模块
+      https = require('https'),   //引入 htts 模块
+      fs = require('fs'),        //引入fs模块
+      util = require('util'),   //引入工具包
+      accessTokenJson  = require('./access_token')
 var WeChat = function(config) {
-    // 设置WeChat对象属性
+    // 设置WeChat对象属性config
     this.config = config;
+    // 设置WeChat对象属性token
     this.token = config.token;
+    // 设置WeChat对象属性appID
+    this.appID = config.appID;
+    // 设置WeChat对象属性appScrect
+    this.appScrect = config.appScrect;
+    // 设置WeChat对象属性apiDomain
+    this.apiDomain = config.apiDomain;
+    // 设置WeChat对象属性apiURL
+    this.apiURL = config.apiURL;
+
+    // 处理https Get 请求
+    this.requireGet = function(url) {
+        return new Promise(function(resolve, reject) {
+            https.get(url, function(res) {
+                var buffer = [], result="";
+                // 监听data事件
+                res.on('data', function(data){
+                    buffer.push(data);
+                });
+                res.on('end', function() {
+                    result = Buffer.concat(buffer,buffer.length).toString('utf-8');
+                    //将最后结果返回
+                    resolve(result);
+                });
+            }).on('error', function(err) {
+                reject(err);
+            })
+        })
+    }
 }
 
+// 验证是否连接成功
 WeChat.prototype.auth = function(req,res) {
     // 获取微信服务器请求的参数         
     var signature = req.query.signature;//微信加密签名
@@ -30,5 +63,31 @@ WeChat.prototype.auth = function(req,res) {
     }
 }
 
+// 获取access_token
+WeChat.prototype.getAccessToken = function() {
+    var that = this;
+    return new Promise(function(resolve, reject) {
+        // 获取时间戳
+        var currentTime =  new Date().getTime();
+        var url = util.format(that.apiURL.accessTokenApi, that.apiDomain, that.appID, that.appScrect);
+        if(accessTokenJson.access_token === '' || accessTokenJson.expires_time < currentTime) {
+            that.requireGet(url).then(function(data) {
+                var result = JSON.parse(data);
+                if(data.indexOf("errcode") < 0) {
+                    accessTokenJson.access_token = result.access_token;
+                    accessTokenJson.expires_time = new Date().getTime() + (parseInt(result.expires_in) - 200) * 1000;
+                    fs.writeFile('./wechat/access_token.json', JSON.stringify(accessTokenJson));
+                    // 获取并返回
+                    resolve(accessTokenJson);
+                }else{
+                    //将错误返回
+                    resolve(result);
+                }
+            })
+        } else {
+            resolve(accessTokenJson.access_token);
+        }
+    })
+}
 
 module.exports = WeChat;
