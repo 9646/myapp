@@ -14,21 +14,20 @@ WeChat.prototype.auth = function(req,res) {
     var nonce = req.query.nonce;//随机数
     var echostr = req.query.echostr;//随机字符串
     
-    // //将token、timestamp、nonce三个参数进行字典序排序
-    // var array = new Array(this.token, timestamp, nonce);
-    // array.sort();
-    // var str = array.toString().replace(/,/g, '');
+    //将token、timestamp、nonce三个参数进行字典序排序
+    var array = new Array(this.token, timestamp, nonce);
+    array.sort();
+    var str = array.toString().replace(/,/g, '');
 
 
-    // var sha1Code = crypto.createHash('sha1');
-    // var code = sha1Code.update(str, 'utf-8').digest('hex');
+    var sha1Code = crypto.createHash('sha1');
+    var code = sha1Code.update(str, 'utf-8').digest('hex');
 
-    // if(code===signature) {
-    // res.send(echostr);
-    // } else {
-    // res.send('mismatch');
-    // }
+    if(code===signature) {
     res.send(echostr);
+    } else {
+    res.send('mismatch');
+    }
 }
 
 
