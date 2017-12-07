@@ -81,6 +81,8 @@ WeChat.prototype.getAccessToken = function() {
         if(accessTokenJson.access_token === '' || accessTokenJson.expires_time < currentTime) {
             that.requireGet(url).then(function(data) {
                 var result = JSON.parse(data);
+                console.log('获取的数据');
+                console.log(result);
                 if(data.indexOf("errcode") < 0) {
                     accessTokenJson.access_token = result.access_token;
                     accessTokenJson.expires_time = new Date().getTime() + (parseInt(result.expires_in) - 200) * 1000;
