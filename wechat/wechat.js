@@ -67,6 +67,8 @@ WeChat.prototype.auth = function(req,res) {
 WeChat.prototype.getAccessToken = function() {
     var that = this;
     return new Promise(function(resolve, reject) {
+        console.log('获取getAccessToken');
+        console.log(accessTokenJson);
         // 获取时间戳
         var currentTime =  new Date().getTime();
         var url = util.format(that.apiURL.accessTokenApi, that.apiDomain, that.appID, that.appScrect);
