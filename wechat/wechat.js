@@ -3,7 +3,8 @@ const crypto =  require('crypto'), //引入加密模块
       https = require('https'),   //引入 htts 模块
       fs = require('fs'),        //引入fs模块
       util = require('util'),   //引入工具包
-      accessTokenJson  = require('./access_token')
+      accessTokenJson  = require('./access_token');
+
 var WeChat = function(config) {
     // 设置WeChat对象属性config
     this.config = config;
