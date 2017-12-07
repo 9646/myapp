@@ -21,6 +21,8 @@ var WeChat = function(config) {
 
     // 处理https Get 请求
     this.requireGet = function(url) {
+        console.log('处理https Get请求');
+        console.log(url);
         return new Promise(function(resolve, reject) {
             https.get(url, function(res) {
                 var buffer = [], result="";
@@ -72,6 +74,7 @@ WeChat.prototype.getAccessToken = function() {
         console.log(accessTokenJson);
         // 获取时间戳
         var currentTime =  new Date().getTime();
+        console.log(that);
         var url = util.format(that.apiURL.accessTokenApi, that.apiDomain, that.appID, that.appScrect);
         if(accessTokenJson.access_token === '' || accessTokenJson.expires_time < currentTime) {
             that.requireGet(url).then(function(data) {
