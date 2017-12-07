@@ -24,7 +24,9 @@ var WeChat = function(config) {
         console.log('处理https Get请求');
         console.log(url);
         return new Promise(function(resolve, reject) {
+            console.log(url);
             https.get(url, function(res) {
+                console.log(res);
                 var buffer = [], result="";
                 // 监听data事件
                 res.on('data', function(data){
