@@ -53,5 +53,6 @@ module.exports = app;
  * 
  * nohup node ./bin/www > log & exit 使用nohup永久运行（使用exit关闭）
  * ps -ef 用这个命令查看进程
+ * ps -ef | grep command
  * kill -9 12945(pid) 杀死进程
  */
