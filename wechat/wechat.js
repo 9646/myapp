@@ -33,14 +33,13 @@ var WeChat = function(config) {
                 });
                 res.on('end', function() {
                     console.log('监听end事件');
-                    console.log(res);
-                    result = Buffer.concat(buffer,buffer.length).toString('utf-8');
+                    console.log(buffer);
+                    result = Buffer.concat(buffer).toString('utf-8');
                     //将最后结果返回
+                    console.log(result);
                     resolve(result);
                 });
             }).on('error', function(err) {
-                console.log('请求发生错误');
-                console.log(err);
                 reject(err);
             })
         })
