@@ -22,18 +22,13 @@ var WeChat = function(config) {
     // 处理https Get 请求
     this.requireGet = function(url) {
         return new Promise(function(resolve, reject) {
-            console.log(url);
             https.get(url, function(res) {
                 var buffer = [], result="";
                 // 监听data事件
                 res.on('data', function(data){
-                    console.log('监听data事件');
-                    console.log(data);
                     buffer.push(data);
                 });
                 res.on('end', function() {
-                    console.log('监听end事件');
-                    console.log(buffer);
                     result = Buffer.concat(buffer).toString('utf-8');
                     //将最后结果返回
                     console.log(result);
@@ -74,23 +69,18 @@ WeChat.prototype.auth = function(req,res) {
 WeChat.prototype.getAccessToken = function() {
     var that = this;
     return new Promise(function(resolve, reject) {
-        console.log('获取getAccessToken');
-        console.log(accessTokenJson);
         // 获取时间戳
         var currentTime =  new Date().getTime();
-        console.log(that);
         var url = util.format(that.apiURL.accessTokenApi, that.apiDomain, that.appID, that.appScrect);
         if(accessTokenJson.access_token === '' || accessTokenJson.expires_time < currentTime) {
             that.requireGet(url).then(function(data) {
                 var result = JSON.parse(data);
-                console.log('获取的数据');
-                console.log(data);
                 if(data.indexOf("errcode") < 0) {
                     accessTokenJson.access_token = result.access_token;
                     accessTokenJson.expires_time = new Date().getTime() + (parseInt(result.expires_in) - 200) * 1000;
                     fs.writeFile('./wechat/access_token.json', JSON.stringify(accessTokenJson));
                     // 获取并返回
-                    resolve(accessTokenJson);
+                    resolve(accessTokenJson.access_token);
                 }else{
                     //将错误返回
                     resolve(result);
