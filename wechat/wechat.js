@@ -3,6 +3,7 @@ const crypto =  require('crypto'), //引入加密模块
       https = require('https'),   //引入 htts 模块
       fs = require('fs'),        //引入fs模块
       util = require('util'),   //引入工具包
+      urltil = require('url'), //引入url模块
       accessTokenJson  = require('./access_token');
 
 var WeChat = function(config) {
@@ -37,6 +38,48 @@ var WeChat = function(config) {
             }).on('error', function(err) {
                 reject(err);
             })
+        })
+    }
+
+    // 处理https post 请求
+    this.requirePost = function(url,data) {
+        return new Promise(function(resolve, reject) {
+            // 解析url
+            var urlData = urltil.parse(url);
+            console.log('解析url');
+            console.log(url);
+            console.log(urlData);
+            // 设置https请求参数对象
+            var options = {
+                // 地址
+                hostname: urlData.hostname,
+                // 目标
+                path: urlData.path,
+                // 请求方式
+                method: 'POST',
+                // 头部协议
+                headers: {
+                    'Content-type': 'application/x-www-form-urlencoded',
+                    'Content-Length': Buffer.byteLength(data,'utf-8')
+                }
+            }
+
+            var req = https.request(options, function(res) {
+                var buffer = [], result = '';
+                // 监听data事件
+                res.on('data', function(data) {
+                    buffer.push(data);
+                });
+                res.on('end', function() {
+                    result = Buffer.concat(buffer).toString('urf-8');
+                    resolve(result);
+                });
+            })
+            .on('error', function(err) {
+                reject(err);
+            });
+            req.write(data);
+            req.end();
         })
     }
 }
@@ -90,6 +133,8 @@ WeChat.prototype.getAccessToken = function() {
             resolve(accessTokenJson.access_token);
         }
     })
+
+    // 
 }
 
 module.exports = WeChat;

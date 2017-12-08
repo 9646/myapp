@@ -1,0 +1,14 @@
+{
+    "button":[
+        {
+            "type": "view",
+            "name": "",
+            "url": ""
+        },
+        {
+            "type": "click",
+            "name": "",
+            "key": ""
+        }
+    ]
+}
