@@ -21,23 +21,26 @@ var WeChat = function(config) {
 
     // 处理https Get 请求
     this.requireGet = function(url) {
-        console.log('处理https Get请求');
-        console.log(url);
         return new Promise(function(resolve, reject) {
             console.log(url);
             https.get(url, function(res) {
-                console.log(res);
                 var buffer = [], result="";
                 // 监听data事件
                 res.on('data', function(data){
+                    console.log('监听data事件');
+                    console.log(data);
                     buffer.push(data);
                 });
                 res.on('end', function() {
+                    console.log('监听end事件');
+                    console.log(res);
                     result = Buffer.concat(buffer,buffer.length).toString('utf-8');
                     //将最后结果返回
                     resolve(result);
                 });
             }).on('error', function(err) {
+                console.log('请求发生错误');
+                console.log(err);
                 reject(err);
             })
         })
@@ -82,7 +85,7 @@ WeChat.prototype.getAccessToken = function() {
             that.requireGet(url).then(function(data) {
                 var result = JSON.parse(data);
                 console.log('获取的数据');
-                console.log(result);
+                console.log(data);
                 if(data.indexOf("errcode") < 0) {
                     accessTokenJson.access_token = result.access_token;
                     accessTokenJson.expires_time = new Date().getTime() + (parseInt(result.expires_in) - 200) * 1000;
